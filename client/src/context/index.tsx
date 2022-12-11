@@ -16,11 +16,22 @@ type Form = {
   image: string;
 };
 
+type Campaign = {
+  owner: string;
+  title: string;
+  description: string;
+  target: ethers.BigNumber;
+  deadline: ethers.BigNumber;
+  amountCollected: ethers.BigNumber;
+  image: string;
+};
+
 interface StateContextProps {
   address: string | undefined;
   contract: SmartContract<ethers.BaseContract> | undefined;
   connect: any;
   createCampaign: (form: Form) => Promise<void>;
+  getCampaigns: Function;
 }
 
 const StateContext = createContext<StateContextProps>({} as StateContextProps);
@@ -58,6 +69,25 @@ export const StateContextProvider = ({ children }: Props) => {
     }
   };
 
+  const getCampaigns = async () => {
+    const campaigns = await contract?.call('getCampaigns');
+
+    const parsedCampaigns = campaigns.map((campaign: Campaign, i: number) => ({
+      owner: campaign.owner,
+      title: campaign.title,
+      description: campaign.description,
+      target: ethers.utils.formatEther(campaign.target.toString()),
+      deadline: campaign.deadline.toNumber(),
+      amountCollected: ethers.utils.formatEther(
+        campaign.amountCollected.toString()
+      ),
+      image: campaign.image,
+      pId: i,
+    }));
+
+    return parsedCampaigns;
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -65,6 +95,7 @@ export const StateContextProvider = ({ children }: Props) => {
         contract,
         connect,
         createCampaign: publishCampaign,
+        getCampaigns,
       }}
     >
       {children}
