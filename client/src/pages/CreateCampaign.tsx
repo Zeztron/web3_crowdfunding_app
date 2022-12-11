@@ -43,8 +43,6 @@ const CreateCampaign = () => {
         setForm({ ...form, image: '' });
       }
     });
-
-    console.log(form);
   };
 
   return (

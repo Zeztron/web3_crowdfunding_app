@@ -19,8 +19,6 @@ const Home = () => {
     if (contract) fetchCampaigns();
   }, [address, contract]);
 
-  console.log(campaigns);
-
   return (
     <DisplayCampaigns
       title="All Campaigns"
