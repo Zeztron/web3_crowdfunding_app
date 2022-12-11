@@ -4,7 +4,7 @@ interface CustomButtonProps {
   btnType: 'button' | 'submit' | 'reset' | undefined;
   title: string;
   styles: string;
-  handleClick: () => void;
+  handleClick: any;
 }
 
 const CustomButtom = ({
