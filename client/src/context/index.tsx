@@ -32,6 +32,7 @@ interface StateContextProps {
   connect: any;
   createCampaign: (form: Form) => Promise<void>;
   getCampaigns: Function;
+  getUserCampaigns: Function;
 }
 
 const StateContext = createContext<StateContextProps>({} as StateContextProps);
@@ -88,6 +89,15 @@ export const StateContextProvider = ({ children }: Props) => {
     return parsedCampaigns;
   };
 
+  const getUserCampaigns = async () => {
+    const allCampains = await getCampaigns();
+
+    const filteredCampaigns = allCampains.filter(
+      (campaign: Campaign) => campaign.owner === address
+    );
+    return filteredCampaigns;
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -96,6 +106,7 @@ export const StateContextProvider = ({ children }: Props) => {
         connect,
         createCampaign: publishCampaign,
         getCampaigns,
+        getUserCampaigns,
       }}
     >
       {children}
